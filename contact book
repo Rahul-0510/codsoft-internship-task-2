@@ -1,63 +1,77 @@
-def add_contact():
-    name = input("Enter contact name: ")
-    phone = input("Enter phone number: ")
-    email = input("Enter email: ")
-    address = input("Enter address: ")
-    
-    # Store contact information in a dictionary and add it to the list
-    contact = {"name": name, "phone": phone, "email": email, "address": address}
-    contacts.append(contact)
-    print(f"Contact for {name} added successfully.\n")
+class Contact:
+    def __init__(self, name, phone, email):
+        self.name = name
+        self.phone = phone
+        self.email = email
 
-# Function to view all contacts
-def view_contacts():
-    if len(contacts) == 0:
-        print("No contacts found.\n")
+class ContactBook:
+    def __init__(self):
+        self.contacts = []
+
+    def add_contact(self, contact):
+        self.contacts.append(contact)
+        print(f"Contact '{contact.name}' added.")
+
+    def view_contacts(self):
+        if not self.contacts:
+            print("No contacts to display.")
+            return
+        for idx, contact in enumerate(self.contacts, start=1):
+            print(f"{idx}. Name: {contact.name}, Phone: {contact.phone}, Email: {contact.email}")
+
+    def search_contact(self, name):
+        for contact in self.contacts:
+            if contact.name.lower() == name.lower():
+                print(f"Found contact - Name: {contact.name}, Phone: {contact.phone}, Email: {contact.email}")
+                return
+        print(f"No contact found with name '{name}'.")
+
+    def update_contact(self, name, new_phone=None, new_email=None):
+        for contact in self.contacts:
+            if contact.name.lower() == name.lower():
+                if new_phone:
+                    contact.phone = new_phone
+                if new_email:
+                    contact.email = new_email
+                print(f"Contact '{name}' updated.")
+                return
+        print(f"No contact found with name '{name}'.")
+
+    def delete_contact(self, name):
+        for contact in self.contacts:
+            if contact.name.lower() == name.lower():
+                self.contacts.remove(contact)
+                print(f"Contact '{name}' deleted.")
+                return
+        print(f"No contact found with name '{name}'.")
+
+# Usage
+contact_book = ContactBook()
+while True:
+    print("\n1. Add Contact\n2. View Contacts\n3. Search Contact\n4. Update Contact\n5. Delete Contact\n6. Exit")
+    choice = input("Enter your choice: ")
+    if choice == "1":
+        name = input("Enter name: ")
+        phone = input("Enter phone number: ")
+        email = input("Enter email: ")
+        contact = Contact(name, phone, email)
+        contact_book.add_contact(contact)
+    elif choice == "2":
+        contact_book.view_contacts()
+    elif choice == "3":
+        name = input("Enter the name to search: ")
+        contact_book.search_contact(name)
+    elif choice == "4":
+        name = input("Enter the name to update: ")
+        new_phone = input("Enter new phone number (leave blank if no change): ")
+        new_email = input("Enter new email (leave blank if no change): ")
+        contact_book.update_contact(name, new_phone if new_phone else None, new_email if new_email else None)
+    elif choice == "5":
+        name = input("Enter the name to delete: ")
+        contact_book.delete_contact(name)
+    elif choice == "6":
+        print("Exiting the contact book program.")
+        break
     else:
-        print("\nContact List:")
-        for contact in contacts:
-            print(f"Name: {contact['name']}")
-            print(f"Phone: {contact['phone']}")
-            print(f"Email: {contact['email']}")
-            print(f"Address: {contact['address']}\n")
+        print("Invalid choice. Please try again.")
 
-# Function to search a contact
-def search_contact():
-    search_term = input("Enter name or phone to search: ")
-    found = False
-    for contact in contacts:
-        if search_term.lower() in contact['name'].lower() or search_term in contact['phone']:
-            print(f"\nFound: {contact['name']}")
-            print(f"Phone: {contact['phone']}")
-            print(f"Email: {contact['email']}")
-            print(f"Address: {contact['address']}\n")
-            found = True
-    if not found:
-        print("No contact found.\n")
-
-# Main menu
-def main():
-    while True:
-        print("Contact Book Menu")
-        print("1. Add Contact")
-        print("2. View Contacts")
-        print("3. Search Contact")
-        print("4. Exit")
-        
-        choice = input("Enter your choice: ")
-
-        if choice == "1":
-            add_contact()
-        elif choice == "2":
-            view_contacts()
-        elif choice == "3":
-            search_contact()
-        elif choice == "4":
-            print("Exiting Contact Book.")
-            break
-        else:
-            print("Invalid choice. Please try again.\n")
-
-# Run the program
-if _name_ == "_main_":
-    main()
